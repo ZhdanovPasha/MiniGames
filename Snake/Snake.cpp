@@ -2,18 +2,18 @@
 #include <glut.h>
 #include <stdlib.h>
 
-//создаем поле для игры 
-int N = 30, M = 20;
+// field size
+int N = 40, M = 20;
 int Scale = 25;
-//размеры окна
+// window size
 int w = Scale * N;
 int h = Scale * M;
 
-//dir - направление(от 0 до 4)
-//num - текущее количество квадратиков в змейке
+//dir - direction(from 0 to 4)
+//num - current snake length
 int dir, num = 4;
 
-//структура змейки
+//snake struct
 struct {
 	int x;
 	int y;
@@ -34,7 +34,7 @@ public:
 } m[10]; 
 
 
-//функция для рисования клеток
+// function for drawing cells
 void DrawField(){
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
@@ -48,10 +48,9 @@ void DrawField(){
 		glVertex2f(w, i);
 	}
 	glEnd();
-
 }
 
-//функция для перемещения змейки
+//function for moving snake
 void Tick() {
 
 	for (int i = num; i > 0; --i) {
@@ -81,10 +80,8 @@ void Tick() {
 			num = i;
 		}
 	}
-
 }
 
-//рисуем змейку
 void DrawSnake() {
 	glColor3f(0.0, 0.0, 1.0);
 	for (int i = 0; i < num; ++i) {
@@ -111,14 +108,10 @@ void myKeyboard(int key, int a, int b) {
 	default:
 		break;
 	}
-
-
 }
 
 void display() {
-	//очищаем экран
 	glClear(GL_COLOR_BUFFER_BIT);
-	
 
 	DrawField();
 	for (int i = 0; i < 10; i++) {
@@ -130,13 +123,9 @@ void display() {
 }
 
 void timer(int = 0){
-	//отображаем то, что на экране
 	display();
-	//для движения змейки
 	Tick();
-	//снова заходим в функцию таймер
 	glutTimerFunc(100, timer, 0);
-
 }
 
 int main(int argc, char** argv) {
@@ -144,13 +133,12 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < 10; i++)
 		m[i].New();
 
-	//задаем начальную позицию для змейки
+	//initial pos for snake
 	s[0].x = 10;
 	s[0].y = 10;
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-	//настройки экрана
 	glutInitWindowSize(w, h);
 	glutCreateWindow("Test");
 	glMatrixMode(GL_PROJECTION);
@@ -158,15 +146,12 @@ int main(int argc, char** argv) {
 	gluOrtho2D(0, w, 0, h);
 	
 
-	//назначаем функцию, которая будет выводить на экран то, что мы рисуем
 	glutDisplayFunc(display);
-	// 50 - задержка в милисекундах
+	// 50 - delay in ms
 	glutTimerFunc(50, timer, 0);
-	//отвечает за клавиатуру
 	glutSpecialFunc(myKeyboard);
 
 	glutMainLoop();
-
 
 	return 0;
 }
